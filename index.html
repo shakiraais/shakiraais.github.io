@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Jeda</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <button id="home-btn">Beranda</button>
+        <button id="checkin-btn">Check-in</button>
+        <button id="toolkit-btn">Toolkit</button>
+        <button id="insight-btn">Insight</button>
+        <button id="help-btn">Bantuan</button>
+    </nav>
+    
+    <div id="app">
+        <!-- Homepage -->
+        <section id="homepage" class="active">
+            <h1>Hai. Gimana dua minggu terakhir kamu?</h1>
+            <button id="start-checkin">Check-in sekarang</button>
+            <button id="need-help">Butuh bantuan lebih lanjut?</button>
+            <p id="quote"></p>
+        </section>
+        
+        <!-- Check-in Page -->
+        <section id="checkin">
+            <h2>How are you feeling lately?</h2>
+            <div class="mood-options">
+                <button class="mood-btn" data-mood="overwhelmed">😵 Overwhelmed</button>
+                <button class="mood-btn" data-mood="biasa">😐 Biasa aja</button>
+                <button class="mood-btn" data-mood="lumayan">🙂 Lumayan</button>
+                <button class="mood-btn" data-mood="oke">😄 Lagi oke</button>
+            </div>
+            <div id="followup" style="display: none;">
+                <h3>Apa yang paling bikin kepikiran akhir-akhir ini?</h3>
+                <div class="category-options">
+                    <button class="category-btn" data-category="Akademik">Akademik</button>
+                    <button class="category-btn" data-category="Organisasi">Organisasi</button>
+                    <button class="category-btn" data-category="Keluarga">Keluarga</button>
+                    <button class="category-btn" data-category="Relasi">Relasi</button>
+                    <button class="category-btn" data-category="Diri sendiri">Diri sendiri</button>
+                    <button class="category-btn" data-category="Lainnya">Lainnya</button>
+                </div>
+                <textarea id="journal" placeholder="Kalau mau cerita sedikit, tulis di sini."></textarea>
+                <button id="submit-checkin">Simpan check-in</button>
+            </div>
+            <p id="feedback" style="display: none;"></p>
+        </section>
+        
+        <!-- Toolkit Page -->
+        <section id="toolkit">
+            <h2>Micro Coping Toolkit</h2>
+            <div class="tool-cards">
+                <div class="tool-card">
+                    <h3>2-Minute Breathing</h3>
+                    <div id="breathing-circle"></div>
+                    <button id="start-breathing">Mulai</button>
+                </div>
+                <div class="tool-card">
+                    <h3>Grounding 5-4-3-2-1</h3>
+                    <ol id="grounding-steps">
+                        <li>5 hal yang bisa kamu lihat</li>
+                        <li>4 hal yang bisa kamu sentuh</li>
+                        <li>3 hal yang bisa kamu dengar</li>
+                        <li>2 hal yang bisa kamu cium</li>
+                        <li>1 hal yang bisa kamu rasakan</li>
+                    </ol>
+                </div>
+                <div class="tool-card">
+                    <h3>Quick Journal Prompt</h3>
+                    <p id="prompt"></p>
+                    <button id="new-prompt">Prompt Baru</button>
+                </div>
+                <div class="tool-card">
+                    <h3>Pause Button</h3>
+                    <button id="pause-btn">Pause</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Insight Page -->
+        <section id="insight">
+            <h2>Insight</h2>
+            <canvas id="mood-chart" width="400" height="200"></canvas>
+            <p id="insight-text"></p>
+        </section>
+        
+        <!-- Help Page -->
+        <section id="help">
+            <h2>Kalau kamu merasa ini mulai berat sendirian…</h2>
+            <p>Banyak mahasiswa pernah ada di posisi yang sama. Kamu nggak sendirian.</p>
+            <p>Jika kamu butuh dukungan lebih, hubungi:</p>
+            <ul>
+                <li>Kampus Counseling Center: [Nomor atau email kampus]</li>
+                <li>Hotline Nasional: 119 (Indonesia)</li>
+                <li>Organisasi seperti KPAI atau LSM kesehatan mental</li>
+            </ul>
+        </section>
+    </div>
+    
+    <!-- Pause Overlay -->
+    <div id="pause-overlay" style="display: none;">
+        <div class="pause-content">
+            <p>Tarik napas. Kamu nggak dikejar sekarang.</p>
+            <div id="countdown">60</div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
