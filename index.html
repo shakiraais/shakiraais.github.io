@@ -4,34 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Journaling App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1 id="app-title">Journaling App</h1>
-        <div class="controls">
-            <button id="lang-toggle">EN</button>
-            <button id="theme-toggle">🌙</button>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">📓</span>
+                <h1 id="app-title">Journaling App</h1>
+            </div>
+            <div class="header-controls">
+                <button id="lang-toggle" class="control-btn">EN</button>
+                <button id="theme-toggle" class="control-btn">🌙</button>
+            </div>
         </div>
     </header>
-    <main>
-        <section id="emotion-section">
-            <h2 id="emotion-title">How are you feeling today?</h2>
-            <div id="emotion-grid"></div>
-        </section>
-        <section id="input-section">
-            <h2 id="input-title">Write Your Journal</h2>
-            <textarea id="journal-text" placeholder="Write what you're feeling today..."></textarea>
-            <button id="save-btn">Save</button>
-        </section>
-        <section id="history-section">
-            <h2 id="history-title">Journal History</h2>
-            <div id="history-list"></div>
-        </section>
+    <main class="app-main">
+        <div class="container">
+            <section class="emotion-section">
+                <h2 id="emotion-title" class="section-title">How are you feeling today?</h2>
+                <div id="emotion-grid" class="emotion-grid"></div>
+            </section>
+            <section class="input-section">
+                <h2 id="input-title" class="section-title">Write Your Journal</h2>
+                <form class="journal-form">
+                    <textarea id="journal-text" class="journal-textarea" placeholder="Write what you're feeling today..."></textarea>
+                    <button id="save-btn" class="save-btn" type="button">Save</button>
+                </form>
+            </section>
+            <section class="history-section">
+                <h2 id="history-title" class="section-title">Journal History</h2>
+                <div id="history-list" class="history-list"></div>
+            </section>
+        </div>
     </main>
-    <div id="message-modal" class="hidden">
-        <p id="motivational-msg"></p>
-        <button id="close-msg">OK</button>
+    <footer class="app-footer">
+        <p>&copy; 2023 Journaling App. A simple way to reflect and grow.</p>
+    </footer>
+    <div id="message-modal" class="modal hidden">
+        <div class="modal-content">
+            <p id="motivational-msg" class="modal-message"></p>
+            <button id="close-msg" class="modal-close-btn">OK</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
