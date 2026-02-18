@@ -3,95 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Journal</title>
+    <title>Journaling App</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <header>
-        <div class="header-content">
-            <h1 id="app-title">Interactive Journal</h1>
-            <div class="controls">
-                <button id="language-toggle" class="btn">EN</button>
-                <button id="theme-toggle" class="btn">🌙</button>
-            </div>
-        </div>
-        <div id="mascot-container">
-            <svg id="mascot" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Mascot SVG will be updated dynamically -->
-                <circle cx="50" cy="50" r="40" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
-                <circle cx="40" cy="40" r="5" fill="#6366f1"/>
-                <circle cx="60" cy="40" r="5" fill="#6366f1"/>
-                <path d="M45 55 Q50 60 55 55" stroke="#6366f1" stroke-width="2" fill="none"/>
-            </svg>
-            <p id="mascot-message">Welcome to your safe space.</p>
+        <h1 id="app-title">Journaling App</h1>
+        <div class="controls">
+            <button id="lang-toggle">EN</button>
+            <button id="theme-toggle">🌙</button>
         </div>
     </header>
-
     <main>
-        <section id="mood-selector">
-            <h2 id="mood-title">How are you feeling today?</h2>
+        <section id="emotion-section">
+            <h2 id="emotion-title">How are you feeling today?</h2>
             <div id="emotion-grid"></div>
-            <div id="selected-emotions">
-                <p id="primary-emotion-label">Primary Emotion:</p>
-                <div id="primary-emotion-display"></div>
-                <p id="tags-label">Additional Tags:</p>
-                <div id="tags-display"></div>
-            </div>
         </section>
-
-        <section id="journal-entry">
-            <h2 id="journal-title">Write Your Journal</h2>
-            <textarea id="journal-text" placeholder="Share your thoughts..."></textarea>
-            <button id="save-entry" class="btn">Save Entry</button>
+        <section id="input-section">
+            <h2 id="input-title">Write Your Journal</h2>
+            <textarea id="journal-text" placeholder="Write what you're feeling today..."></textarea>
+            <button id="save-btn">Save</button>
         </section>
-
-        <section id="history">
+        <section id="history-section">
             <h2 id="history-title">Journal History</h2>
-            <div class="filters">
-                <input type="date" id="date-filter">
-                <select id="emotion-filter">
-                    <option value="">All Emotions</option>
-                </select>
-                <button id="clear-filters" class="btn">Clear Filters</button>
-            </div>
-            <div id="entries-list"></div>
-        </section>
-
-        <section id="analytics">
-            <h2 id="analytics-title">Mood Analytics</h2>
-            <canvas id="mood-chart"></canvas>
-            <canvas id="distribution-chart"></canvas>
-        </section>
-
-        <section id="reminder">
-            <h2 id="reminder-title">Daily Reminder</h2>
-            <input type="time" id="reminder-time">
-            <button id="set-reminder" class="btn">Set Reminder</button>
-            <p id="reminder-status"></p>
+            <div id="history-list"></div>
         </section>
     </main>
-
-    <button id="support-btn" class="floating-btn">💬 Need Support?</button>
-
-    <div id="support-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="support-title">You’re Not Alone.</h2>
-            <p id="support-text">It’s okay to feel tired, sad, or overwhelmed. Asking for help or simply talking to a psychologist is normal and healthy. You don’t have to go through everything alone.</p>
-            <a href="https://ugm.id/kkmft" target="_blank" class="btn">Contact UGM Counseling</a>
-            <p class="emergency-note">If this is an emergency, please contact local emergency services.</p>
-        </div>
+    <div id="message-modal" class="hidden">
+        <p id="motivational-msg"></p>
+        <button id="close-msg">OK</button>
     </div>
-
-    <div id="response-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p id="response-message"></p>
-        </div>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>
