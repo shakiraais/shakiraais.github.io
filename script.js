@@ -1,167 +1,167 @@
-:root {
-    --bg-color: #F5F5DC; /* warm beige */
-    --text-color: #191970; /* deep indigo */
-    --card-bg: #E6E6FA; /* soft lavender */
-    --accent: #B0C4DE; /* dusty blue */
-    --shadow: rgba(0, 0, 0, 0.1);
-    --border-radius: 12px;
-    --transition: all 0.3s ease;
-}
+document.addEventListener("DOMContentLoaded", function() {
+    // Elements
+    const langToggle = document.getElementById('lang-toggle');
+    const themeToggle = document.getElementById('theme-toggle');
+    const emotionGrid = document.getElementById('emotion-grid');
+    const journalText = document.getElementById('journal-text');
+    const saveBtn = document.getElementById('save-btn');
+    const historyList = document.getElementById('history-list');
+    const messageModal = document.getElementById('message-modal');
+    const motivationalMsg = document.getElementById('motivational-msg');
+    const closeMsg = document.getElementById('close-msg');
 
-body.dark {
-    --bg-color: #191970; /* deep indigo */
-    --text-color: #E6E6FA; /* soft lavender */
-    --card-bg: #483D8B; /* muted purple */
-    --accent: #B0C4DE; /* dusty blue */
-    --shadow: rgba(255, 255, 255, 0.1);
-}
+    // Data
+    let currentLang = localStorage.getItem('lang') || 'en';
+    let currentTheme = localStorage.getItem('theme') || 'light';
+    let selectedEmotion = null;
+    let entries = JSON.parse(localStorage.getItem('entries')) || [];
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    // Text mappings
+    const texts = {
+        en: {
+            title: 'Journaling App',
+            emotionTitle: 'How are you feeling today?',
+            inputTitle: 'Write Your Journal',
+            historyTitle: 'Journal History',
+            placeholder: 'Write what you\'re feeling today...',
+            save: 'Save',
+            ok: 'OK'
+        },
+        id: {
+            title: 'Aplikasi Jurnal',
+            emotionTitle: 'Bagaimana perasaanmu hari ini?',
+            inputTitle: 'Tulis Jurnalmu',
+            historyTitle: 'Riwayat Jurnal',
+            placeholder: 'Ceritakan apa yang kamu rasakan hari ini...',
+            save: 'Simpan',
+            ok: 'OK'
+        }
+    };
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.6;
-    transition: var(--transition);
-    padding: 20px;
-    min-height: 100vh;
-}
+    const emotions = [
+        { key: 'happy', emoji: '😊', label: { en: 'Happy', id: 'Bahagia' } },
+        { key: 'calm', emoji: '😌', label: { en: 'Calm', id: 'Tenang' } },
+        { key: 'grateful', emoji: '🙏', label: { en: 'Grateful', id: 'Bersyukur' } },
+        { key: 'excited', emoji: '🤩', label: { en: 'Excited', id: 'Bergairah' } },
+        { key: 'sad', emoji: '😢', label: { en: 'Sad', id: 'Sedih' } },
+        { key: 'lonely', emoji: '😔', label: { en: 'Lonely', id: 'Kesepian' } },
+        { key: 'anxious', emoji: '😰', label: { en: 'Anxious', id: 'Cemas' } },
+        { key: 'overwhelmed', emoji: '😵', label: { en: 'Overwhelmed', id: 'Kewalahan' } },
+        { key: 'angry', emoji: '😠', label: { en: 'Angry', id: 'Marah' } },
+        { key: 'tired', emoji: '😴', label: { en: 'Tired', id: 'Lelah' } },
+        { key: 'neutral', emoji: '😐', label: { en: 'Neutral', id: 'Netral' } }
+    ];
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 8px var(--shadow);
-}
+    const motivationalMessages = {
+        happy: { en: "I’m glad you’re feeling good today.", id: "Senang mendengar kamu merasa baik hari ini." },
+        calm: { en: "Keep that peace within you.", id: "Jaga ketenangan itu di dalam dirimu." },
+        grateful: { en: "Gratitude is a powerful emotion.", id: "Syukur adalah emosi yang kuat." },
+        excited: { en: "Embrace that excitement!", id: "Peluk kegembiraan itu!" },
+        sad: { en: "It’s okay to feel sad. Be gentle with yourself.", id: "Tidak apa-apa merasa sedih. Bersikaplah lembut pada dirimu." },
+        lonely: { en: "You’re not alone; reach out if you need.", id: "Kamu tidak sendirian; hubungi jika perlu." },
+        anxious: { en: "One small step at a time.", id: "Satu langkah kecil dalam satu waktu." },
+        overwhelmed: { en: "Take a deep breath and prioritize.", id: "Tarik napas dalam dan prioritaskan." },
+        angry: { en: "Take a breath before reacting.", id: "Tarik napas sebelum bereaksi." },
+        tired: { en: "Rest is important; take care of yourself.", id: "Istirahat itu penting; jaga dirimu." },
+        neutral: { en: "Thank you for checking in with yourself.", id: "Terima kasih telah memeriksa dirimu." }
+    };
 
-h1, h2 {
-    margin-bottom: 10px;
-}
+    // Initialize
+    setLanguage(currentLang);
+    setTheme(currentTheme);
+    renderEmotions();
+    renderHistory();
 
-.controls {
-    display: flex;
-    gap: 10px;
-}
+    // Event Listeners
+    langToggle.addEventListener('click', () => {
+        currentLang = currentLang === 'en' ? 'id' : 'en';
+        setLanguage(currentLang);
+    });
 
-button {
-    background-color: var(--accent);
-    color: var(--text-color);
-    border: none;
-    padding: 8px 12px;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-}
+    themeToggle.addEventListener('click', () => {
+        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(currentTheme);
+    });
 
-button:hover {
-    background-color: var(--card-bg);
-}
+    saveBtn.addEventListener('click', saveEntry);
+    closeMsg.addEventListener('click', () => messageModal.classList.add('hidden'));
 
-section {
-    margin-bottom: 30px;
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 8px var(--shadow);
-}
-
-#emotion-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 10px;
-}
-
-.emotion-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-    background-color: var(--bg-color);
-}
-
-.emotion-item.selected {
-    background-color: var(--accent);
-    color: var(--bg-color);
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    border: 1px solid var(--accent);
-    border-radius: var(--border-radius);
-    resize: vertical;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: var(--transition);
-}
-
-textarea:focus {
-    outline: none;
-    border-color: var(--text-color);
-}
-
-#history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.history-card {
-    padding: 15px;
-    background-color: var(--bg-color);
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 4px var(--shadow);
-    position: relative;
-}
-
-.history-card .delete-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 5px 8px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-#message-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--card-bg);
-    padding: 20px;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 8px var(--shadow);
-    text-align: center;
-    z-index: 1000;
-}
-
-.hidden {
-    display: none;
-}
-
-@media (max-width: 600px) {
-    header {
-        flex-direction: column;
-        gap: 10px;
+    // Functions
+    function setLanguage(lang) {
+        localStorage.setItem('lang', lang);
+        document.getElementById('app-title').textContent = texts[lang].title;
+        document.getElementById('emotion-title').textContent = texts[lang].emotionTitle;
+        document.getElementById('input-title').textContent = texts[lang].inputTitle;
+        document.getElementById('history-title').textContent = texts[lang].historyTitle;
+        journalText.placeholder = texts[lang].placeholder;
+        saveBtn.textContent = texts[lang].save;
+        closeMsg.textContent = texts[lang].ok;
+        renderEmotions();
+        renderHistory();
     }
-    #emotion-grid {
-        grid-template-columns: repeat(2, 1fr);
+
+    function setTheme(theme) {
+        localStorage.setItem('theme', theme);
+        document.body.classList.toggle('dark', theme === 'dark');
+        themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
     }
-}
+
+    function renderEmotions() {
+        emotionGrid.innerHTML = '';
+        emotions.forEach(emotion => {
+            const div = document.createElement('div');
+            div.className = 'emotion-item';
+            if (selectedEmotion === emotion.key) div.classList.add('selected');
+            div.innerHTML = `<span>${emotion.emoji}</span><span>${emotion.label[currentLang]}</span>`;
+            div.addEventListener('click', () => {
+                selectedEmotion = emotion.key;
+                renderEmotions();
+            });
+            emotionGrid.appendChild(div);
+        });
+    }
+
+    function saveEntry() {
+        if (!selectedEmotion || !journalText.value.trim()) return;
+        const entry = {
+            id: Date.now(),
+            date: new Date().toLocaleString(),
+            emotion: selectedEmotion,
+            content: journalText.value.trim()
+        };
+        entries.unshift(entry);
+        localStorage.setItem('entries', JSON.stringify(entries));
+        journalText.value = '';
+        selectedEmotion = null;
+        renderEmotions();
+        renderHistory();
+        showMessage(entry.emotion);
+    }
+
+    function renderHistory() {
+        historyList.innerHTML = '';
+        entries.forEach(entry => {
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            const emotion = emotions.find(e => e.key === entry.emotion);
+            card.innerHTML = `
+                <p><strong>${emotion.emoji} ${emotion.label[currentLang]}</strong> - ${entry.date}</p>
+                <p>${entry.content}</p>
+                <button class="delete-btn">×</button>
+            `;
+            card.querySelector('.delete-btn').addEventListener('click', () => deleteEntry(entry.id));
+            historyList.appendChild(card);
+        });
+    }
+
+    function deleteEntry(id) {
+        entries = entries.filter(entry => entry.id !== id);
+        localStorage.setItem('entries', JSON.stringify(entries));
+        renderHistory();
+    }
+
+    function showMessage(emotion) {
+        motivationalMsg.textContent = motivationalMessages[emotion][currentLang];
+        messageModal.classList.remove('hidden');
+    }
+});
