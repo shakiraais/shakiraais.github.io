@@ -3,53 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journaling App</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Safe Space Journal</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-    <header class="app-header">
-        <div class="header-content">
-            <div class="logo">
-                <span class="logo-icon">📓</span>
-                <h1 id="app-title">Journaling App</h1>
-            </div>
-            <div class="header-controls">
-                <button id="lang-toggle" class="control-btn">EN</button>
-                <button id="theme-toggle" class="control-btn">🌙</button>
-            </div>
+    <header>
+        <h1 id="app-title">Safe Space Journal</h1>
+        <div class="header-controls">
+            <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+            <button id="lang-toggle" aria-label="Toggle language">ID/EN</button>
         </div>
     </header>
-    <main class="app-main">
-        <div class="container">
-            <section class="emotion-section">
-                <h2 id="emotion-title" class="section-title">How are you feeling today?</h2>
-                <div id="emotion-grid" class="emotion-grid"></div>
-            </section>
-            <section class="input-section">
-                <h2 id="input-title" class="section-title">Write Your Journal</h2>
-                <form class="journal-form">
-                    <textarea id="journal-text" class="journal-textarea" placeholder="Write what you're feeling today..."></textarea>
-                    <button id="save-btn" class="save-btn" type="button">Save</button>
-                </form>
-            </section>
-            <section class="history-section">
-                <h2 id="history-title" class="section-title">Journal History</h2>
-                <div id="history-list" class="history-list"></div>
-            </section>
+
+    <main>
+        <section id="journal-section" class="section active">
+            <div class="mascot-container">
+                <div id="mascot"></div>
+                <p id="mascot-message"></p>
+            </div>
+            <div class="card">
+                <h2 id="mood-title">How are you feeling today?</h2>
+                <div id="mood-selector">
+                    <!-- Mood options will be populated by JS -->
+                </div>
+                <div id="selected-moods">
+                    <p id="selected-primary">Primary Mood: None</p>
+                    <p id="selected-tags">Tags: None</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2 id="journal-title">Your Journal Entry</h2>
+                <textarea id="journal-text" placeholder="Express your thoughts freely. This space is safe and judgment-free."></textarea>
+                <p class="privacy-note">This journal is private and stored only on your device.</p>
+                <button id="save-entry" class="btn-primary">Save Entry</button>
+            </div>
+            <div id="response-card" class="card hidden">
+                <p id="motivational-message"></p>
+                <p id="reflection-prompt"></p>
+            </div>
+        </section>
+
+        <section id="history-section" class="section">
+            <h2 id="history-title">Journal History</h2>
+            <div class="filters">
+                <input type="date" id="filter-date">
+                <select id="filter-mood">
+                    <option value="">All Moods</option>
+                    <!-- Options populated by JS -->
+                </select>
+                <button id="apply-filters">Apply Filters</button>
+            </div>
+            <div id="history-list">
+                <!-- Entries will be populated by JS -->
+            </div>
+        </section>
+
+        <section id="analytics-section" class="section">
+            <h2 id="analytics-title">Mood Analytics</h2>
+            <canvas id="mood-chart"></canvas>
+            <canvas id="distribution-chart"></canvas>
+        </section>
+
+        <section id="tips-section" class="section">
+            <h2 id="tips-title">Emotional Tips</h2>
+            <button id="toggle-tips">Show Tips</button>
+            <div id="tips-content" class="hidden">
+                <p id="breathing-tip"></p>
+                <p id="compassion-tip"></p>
+                <p id="grounding-tip"></p>
+            </div>
+        </section>
+
+        <div id="reminder-section" class="card">
+            <h2 id="reminder-title">Daily Reminder</h2>
+            <input type="time" id="reminder-time">
+            <button id="set-reminder">Set Reminder</button>
+            <p id="reminder-status"></p>
         </div>
     </main>
-    <footer class="app-footer">
-        <p>&copy; 2023 Journaling App. A simple way to reflect and grow.</p>
-    </footer>
-    <div id="message-modal" class="modal hidden">
+
+    <nav>
+        <button id="nav-journal" class="nav-btn active">Journal</button>
+        <button id="nav-history" class="nav-btn">History</button>
+        <button id="nav-analytics" class="nav-btn">Analytics</button>
+        <button id="nav-tips" class="nav-btn">Tips</button>
+    </nav>
+
+    <button id="support-btn" class="floating-btn">💬 Need Support?</button>
+
+    <div id="support-modal" class="modal hidden">
         <div class="modal-content">
-            <p id="motivational-msg" class="modal-message"></p>
-            <button id="close-msg" class="modal-close-btn">OK</button>
+            <span id="modal-close" class="close">&times;</span>
+            <h2 id="modal-title">You’re Not Alone.</h2>
+            <p id="modal-text"></p>
+            <a id="modal-link" href="https://ugm.id/kkmft" target="_blank" class="btn-primary">Hubungi Konseling UGM</a>
+            <p id="emergency-text">If this is an emergency, please contact local emergency services.</p>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
