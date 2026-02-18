@@ -1,115 +1,97 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruang Jeda</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Interactive Journal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-    <nav>
-        <button id="home-btn">Beranda</button>
-        <button id="checkin-btn">Check-in</button>
-        <button id="toolkit-btn">Toolkit</button>
-        <button id="insight-btn">Insight</button>
-        <button id="help-btn">Bantuan</button>
-    </nav>
-    
-    <div id="app">
-        <!-- Homepage -->
-        <section id="homepage" class="active">
-            <h1>Hai. Gimana dua minggu terakhir kamu?</h1>
-            <button id="start-checkin">Check-in sekarang</button>
-            <button id="need-help">Butuh bantuan lebih lanjut?</button>
-            <p id="quote"></p>
-        </section>
-        
-        <!-- Check-in Page -->
-        <section id="checkin">
-            <h2>How are you feeling lately?</h2>
-            <div class="mood-options">
-                <button class="mood-btn" data-mood="overwhelmed">😵 Overwhelmed</button>
-                <button class="mood-btn" data-mood="biasa">😐 Biasa aja</button>
-                <button class="mood-btn" data-mood="lumayan">🙂 Lumayan</button>
-                <button class="mood-btn" data-mood="oke">😄 Lagi oke</button>
-                <button class="mood-btn" data-mood="sedih">😔 Lagi sedih</button>
+    <header>
+        <div class="header-content">
+            <h1 id="app-title">Interactive Journal</h1>
+            <div class="controls">
+                <button id="language-toggle" class="btn">EN</button>
+                <button id="theme-toggle" class="btn">🌙</button>
             </div>
-            <div id="followup" style="display: none;">
-                <h3>Apa yang paling bikin kepikiran akhir-akhir ini?</h3>
-                <div class="category-options">
-                    <button class="category-btn" data-category="Akademik">Akademik</button>
-                    <button class="category-btn" data-category="Organisasi">Organisasi</button>
-                    <button class="category-btn" data-category="Keluarga">Keluarga</button>
-                    <button class="category-btn" data-category="Relasi">Relasi</button>
-                    <button class="category-btn" data-category="Diri sendiri">Diri sendiri</button>
-                    <button class="category-btn" data-category="Lainnya">Lainnya</button>
-                </div>
-                <textarea id="journal" placeholder="Kalau mau cerita sedikit, tulis di sini."></textarea>
-                <button id="submit-checkin">Simpan check-in</button>
-            </div>
-            <p id="feedback" style="display: none;"></p>
-        </section>
-        
-        <!-- Toolkit Page -->
-        <section id="toolkit">
-            <h2>Micro Coping Toolkit</h2>
-            <div class="tool-cards">
-                <div class="tool-card">
-                    <h3>2-Minute Breathing</h3>
-                    <div id="breathing-circle"></div>
-                    <button id="start-breathing">Mulai</button>
-                </div>
-                <div class="tool-card">
-                    <h3>Grounding 5-4-3-2-1</h3>
-                    <ol id="grounding-steps">
-                        <li>5 hal yang bisa kamu lihat</li>
-                        <li>4 hal yang bisa kamu sentuh</li>
-                        <li>3 hal yang bisa kamu dengar</li>
-                        <li>2 hal yang bisa kamu cium</li>
-                        <li>1 hal yang bisa kamu rasakan</li>
-                    </ol>
-                </div>
-                <div class="tool-card">
-                    <h3>Quick Journal Prompt</h3>
-                    <p id="prompt"></p>
-                    <button id="new-prompt">Prompt Baru</button>
-                </div>
-                <div class="tool-card">
-                    <h3>Pause Button</h3>
-                    <button id="pause-btn">Pause</button>
-                </div>
+        </div>
+        <div id="mascot-container">
+            <svg id="mascot" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Mascot SVG will be updated dynamically -->
+                <circle cx="50" cy="50" r="40" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+                <circle cx="40" cy="40" r="5" fill="#6366f1"/>
+                <circle cx="60" cy="40" r="5" fill="#6366f1"/>
+                <path d="M45 55 Q50 60 55 55" stroke="#6366f1" stroke-width="2" fill="none"/>
+            </svg>
+            <p id="mascot-message">Welcome to your safe space.</p>
+        </div>
+    </header>
+
+    <main>
+        <section id="mood-selector">
+            <h2 id="mood-title">How are you feeling today?</h2>
+            <div id="emotion-grid"></div>
+            <div id="selected-emotions">
+                <p id="primary-emotion-label">Primary Emotion:</p>
+                <div id="primary-emotion-display"></div>
+                <p id="tags-label">Additional Tags:</p>
+                <div id="tags-display"></div>
             </div>
         </section>
-        
-        <!-- Insight Page -->
-        <section id="insight">
-            <h2>Insight</h2>
-            <canvas id="mood-chart" width="400" height="200"></canvas>
-            <p id="insight-text"></p>
+
+        <section id="journal-entry">
+            <h2 id="journal-title">Write Your Journal</h2>
+            <textarea id="journal-text" placeholder="Share your thoughts..."></textarea>
+            <button id="save-entry" class="btn">Save Entry</button>
         </section>
-        
-        <!-- Help Page -->
-        <section id="help">
-            <h2>Kalau kamu merasa ini mulai berat sendirian…</h2>
-            <p>Banyak mahasiswa pernah ada di posisi yang sama. Kamu nggak sendirian.</p>
-            <p>Jika kamu butuh dukungan lebih, hubungi:</p>
-            <ul>
-                <li>Kampus Counseling Center: [Nomor atau email kampus]</li>
-                <li>Hotline Nasional: 119 (Indonesia)</li>
-                <li>Organisasi seperti KPAI atau LSM kesehatan mental</li>
-            </ul>
+
+        <section id="history">
+            <h2 id="history-title">Journal History</h2>
+            <div class="filters">
+                <input type="date" id="date-filter">
+                <select id="emotion-filter">
+                    <option value="">All Emotions</option>
+                </select>
+                <button id="clear-filters" class="btn">Clear Filters</button>
+            </div>
+            <div id="entries-list"></div>
         </section>
-    </div>
-    
-    <!-- Pause Overlay -->
-    <div id="pause-overlay" style="display: none;">
-        <div class="pause-content">
-            <p>Tarik napas. Kamu nggak dikejar sekarang.</p>
-            <div id="countdown">60</div>
+
+        <section id="analytics">
+            <h2 id="analytics-title">Mood Analytics</h2>
+            <canvas id="mood-chart"></canvas>
+            <canvas id="distribution-chart"></canvas>
+        </section>
+
+        <section id="reminder">
+            <h2 id="reminder-title">Daily Reminder</h2>
+            <input type="time" id="reminder-time">
+            <button id="set-reminder" class="btn">Set Reminder</button>
+            <p id="reminder-status"></p>
+        </section>
+    </main>
+
+    <button id="support-btn" class="floating-btn">💬 Need Support?</button>
+
+    <div id="support-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="support-title">You’re Not Alone.</h2>
+            <p id="support-text">It’s okay to feel tired, sad, or overwhelmed. Asking for help or simply talking to a psychologist is normal and healthy. You don’t have to go through everything alone.</p>
+            <a href="https://ugm.id/kkmft" target="_blank" class="btn">Contact UGM Counseling</a>
+            <p class="emergency-note">If this is an emergency, please contact local emergency services.</p>
         </div>
     </div>
-    
+
+    <div id="response-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="response-message"></p>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
-
 </html>
