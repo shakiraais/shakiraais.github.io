@@ -47,7 +47,7 @@ h1, h2, h3 {
 }
 
 button {
-    background-color: #98fb98;
+    background-color: #2596be;
     border: none;
     border-radius: 20px;
     padding: 10px 20px;
@@ -136,4 +136,5 @@ textarea {
     .tool-cards {
         grid-template-columns: 1fr;
     }
+
 }
