@@ -1,131 +1,55 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Navigation
-    const sections = document.querySelectorAll('section');
-    const navButtons = document.querySelectorAll('nav button');
-    
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const target = btn.id.replace('-btn', '');
-            showSection(target);
-        });
-    });
-    
-    function showSection(id) {
-        sections.forEach(sec => sec.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+// i18n object for bilingual support
+const translations = {
+    en: {
+        appTitle: "Interactive Journal",
+        moodTitle: "How are you feeling today?",
+        primaryEmotionLabel: "Primary Emotion:",
+        tagsLabel: "Additional Tags:",
+        journalTitle: "Write Your Journal",
+        saveEntry: "Save Entry",
+        historyTitle: "Journal History",
+        clearFilters: "Clear Filters",
+        analyticsTitle: "Mood Analytics",
+        reminderTitle: "Daily Reminder",
+        setReminder: "Set Reminder",
+        supportTitle: "You’re Not Alone.",
+        supportText: "It’s okay to feel tired, sad, or overwhelmed. Asking for help or simply talking to a psychologist is normal and healthy. You don’t have to go through everything alone.",
+        contactCounseling: "Contact UGM Counseling",
+        emergencyNote: "If this is an emergency, please contact local emergency services.",
+        mascotWelcome: "Welcome to your safe space.",
+        placeholder: "Share your thoughts..."
+    },
+    id: {
+        appTitle: "Jurnal Interaktif",
+        moodTitle: "Bagaimana perasaanmu hari ini?",
+        primaryEmotionLabel: "Emosi Utama:",
+        tagsLabel: "Tag Tambahan:",
+        journalTitle: "Tulis Jurnalmu",
+        saveEntry: "Simpan Entri",
+        historyTitle: "Riwayat Jurnal",
+        clearFilters: "Hapus Filter",
+        analyticsTitle: "Analitik Suasana Hati",
+        reminderTitle: "Pengingat Harian",
+        setReminder: "Atur Pengingat",
+        supportTitle: "Kamu Tidak Sendiri.",
+        supportText: "Tidak apa-apa merasa lelah, sedih, atau kewalahan. Meminta bantuan atau sekadar berbicara dengan psikolog adalah hal yang normal dan sehat. Kamu tidak harus menghadapi semuanya sendirian.",
+        contactCounseling: "Hubungi Konseling UGM",
+        emergencyNote: "Jika ini adalah keadaan darurat, silakan hubungi layanan darurat setempat.",
+        mascotWelcome: "Selamat datang di ruang amanmu.",
+        placeholder: "Bagikan pikiranmu..."
     }
-    
-    // Homepage
-    const quotes = [
-        "Nggak harus kuat terus kok.",
-        "Minta bantuan itu bukan tanda lemah.",
-        "Istirahat juga bagian dari progres.",
-        "Kamu nggak sendirian."
-    ];
-    document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-    
-    document.getElementById('start-checkin').addEventListener('click', () => showSection('checkin'));
-    document.getElementById('need-help').addEventListener('click', () => showSection('help'));
-    
-    // Check-in
-    let selectedMood = '';
-    let selectedCategory = '';
-    document.querySelectorAll('.mood-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            selectedMood = btn.dataset.mood;
-            document.getElementById('followup').style.display = 'block';
-        });
-    });
-    
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            selectedCategory = btn.dataset.category;
-        });
-    });
-    
-    document.getElementById('submit-checkin').addEventListener('click', () => {
-        const journal = document.getElementById('journal').value;
-        const checkin = {
-            mood: selectedMood,
-            date: new Date().toISOString().split('T')[0],
-            category: selectedCategory,
-            journal: journal
-        };
-        
-        let checkins = JSON.parse(localStorage.getItem('checkins')) || [];
-        checkins.push(checkin);
-        localStorage.setItem('checkins', JSON.stringify(checkins));
-        
-        const feedbacks = {
-            overwhelmed: "Kayaknya kamu lagi banyak beban ya. Semoga hari ini kamu bisa ambil jeda sebentar.",
-            biasa: "Kadang hari terasa flat, dan itu juga nggak apa-apa.",
-            lumayan: "Semoga energi kecil ini bisa kamu jaga pelan-pelan.",
-            oke: "Senang dengar kamu lagi oke. Jangan lupa tetap jaga diri."
-        };
-        
-        document.getElementById('feedback').textContent = feedbacks[selectedMood];
-        document.getElementById('feedback').style.display = 'block';
-        document.getElementById('followup').style.display = 'none';
-    });
-    
-    // Toolkit
-    const prompts = [
-        "Apa 1 hal kecil yang bisa kamu kontrol hari ini?",
-        "Apa yang sebenarnya kamu butuhkan sekarang?",
-        "Kalau kamu bisa istirahat tanpa rasa bersalah, apa yang akan kamu lakukan?"
-    ];
-    
-    document.getElementById('new-prompt').addEventListener('click', () => {
-        document.getElementById('prompt').textContent = prompts[Math.floor(Math.random() * prompts.length)];
-    });
-    document.getElementById('new-prompt').click(); // Initial prompt
-    
-    document.getElementById('start-breathing').addEventListener('click', () => {
-        const circle = document.getElementById('breathing-circle');
-        circle.style.transform = 'scale(1.5)';
-        setTimeout(() => circle.style.transform = 'scale(1)', 4000);
-    });
-    
-    document.getElementById('pause-btn').addEventListener('click', () => {
-        document.getElementById('pause-overlay').style.display = 'flex';
-        let time = 60;
-        const countdown = document.getElementById('countdown');
-        const interval = setInterval(() => {
-            countdown.textContent = time;
-            time--;
-            if (time < 0) {
-                clearInterval(interval);
-                document.getElementById('pause-overlay').style.display = 'none';
-            }
-        }, 1000);
-    });
-    
-    // Insight
-    function drawChart() {
-        const checkins = JSON.parse(localStorage.getItem('checkins')) || [];
-        const canvas = document.getElementById('mood-chart');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        const moodEmojis = { overwhelmed: '😵', biasa: '😐', lumayan: '🙂', oke: '😄' };
-        const recent = checkins.slice(-7); // Last 7 checkins
-        
-        recent.forEach((checkin, i) => {
-            const x = (i + 1) * (canvas.width / 8);
-            const y = canvas.height / 2;
-            ctx.font = '30px Arial';
-            ctx.fillText(moodEmojis[checkin.mood], x, y);
-        });
-        
-        // Simple insight
-        const overwhelmedCount = recent.filter(c => c.mood === 'overwhelmed').length;
-        if (overwhelmedCount > 3) {
-            document.getElementById('insight-text').textContent = "Dalam beberapa minggu terakhir, kamu sering merasa overwhelmed menjelang deadline.";
-        } else {
-            document.getElementById('insight-text').textContent = "Terus jaga ritme yang baik!";
-        }
-    }
-    
-    if (document.getElementById('insight').classList.contains('active')) drawChart();
-    document.getElementById('insight-btn').addEventListener('click', drawChart);
-});
+};
+
+// Emotion data with SVG illustrations
+const emotions = [
+    { name: "Happy", emoji: "😊", svg: '<circle cx="50" cy="50" r="40" fill="#fef3c7"/><circle cx="35" cy="35" r="5" fill="#f59e0b"/><circle cx="65" cy="35" r="5" fill="#f59e0b"/><path d="M30 60 Q50 75 70 60" stroke="#f59e0b" stroke-width="3" fill="none"/>' },
+    { name: "Calm", emoji: "😌", svg: '<circle cx="50" cy="50" r="40" fill="#dbeafe"/><circle cx="35" cy="35" r="5" fill="#3b82f6"/><circle cx="65" cy="35" r="5" fill="#3b82f6"/><path d="M40 60 Q50 65 60 60" stroke="#3b82f6" stroke-width="2" fill="none"/>' },
+    { name: "Grateful", emoji: "🙏", svg: '<circle cx="50" cy="50" r="40" fill="#dcfce7"/><circle cx="35" cy="35" r="5" fill="#10b981"/><circle cx="65" cy="35" r="5" fill="#10b981"/><path d="M45 55 Q50 60 55 55" stroke="#10b981" stroke-width="2" fill="none"/>' },
+    { name: "Excited", emoji: "🤩", svg: '<circle cx="50" cy="50" r="40" fill="#fef3c7"/><circle cx="35" cy="30" r="6" fill="#f59e0b"/><circle cx="65" cy="30" r="6" fill="#f59e0b"/><path d="M25 65 Q50 80 75 65" stroke="#f59e0b" stroke-width="3" fill="none"/><circle cx="30" cy="25" r="2" fill="#f59e0b"/><circle cx="70" cy="25" r="2" fill="#f59e0b"/>' },
+    { name: "Proud", emoji: "😊", svg: '<circle cx="50" cy="50" r="40" fill="#fef3c7"/><circle cx="35" cy="35" r="5" fill="#f59e0b"/><circle cx="65" cy="35" r="5" fill="#f59e0b"/><path d="M35 60 Q50 70 65 60" stroke="#f59e0b" stroke-width="3" fill="none"/>' },
+    { name: "Loved", emoji: "🥰", svg: '<circle cx="50" cy="50" r="40" fill="#fce7f3"/><circle cx="35" cy="35" r="5" fill="#ec4899"/><circle cx="65" cy="35" r="5" fill="#ec4899"/><path d="M45 55 Q50 60 55 55" stroke="#ec4899" stroke-width="2" fill="none"/><path d="M25 45 Q50 35 75 45" stroke="#ec4899" stroke-width="2" fill="none"/>' },
+    { name: "Sad", emoji: "😢", svg: '<circle cx="50" cy="50" r="40" fill="#dbeafe"/><circle cx="35" cy="40" r="5" fill="#3b82f6"/><circle cx="65" cy="40" r="5" fill="#3b82f6"/><path d="M35 65 Q50 55 65 65" stroke="#3b82f6" stroke-width="3" fill="none"/>' },
+    { name: "Lonely", emoji: "😔", svg: '<circle cx="50" cy="50" r="40" fill="#e5e7eb"/><circle cx="35" cy="40" r="5" fill="#6b7280"/><circle cx="65" cy="40" r="5" fill="#6b7280"/><path d="M40 60 Q50 55 60 60" stroke="#6b7280" stroke-width="2" fill="none"/>' },
+    { name: "Anxious", emoji: "😰", svg: '<circle cx="50" cy="50" r="40" fill="#fef3c7"/><circle cx="35" cy="35" r="6" fill="#f59e0b"/><circle cx="65" cy="35" r="6" fill="#f59e0b"/><path d="M35 65 Q50 60 65 65" stroke="#f59e0b" stroke-width="3" fill="none"/><circle cx="25" cy="30" r="2" fill="#f59e0b"/><circle cx="75" cy="30" r="2" fill="#f59e0b"/>' },
+    { name: "Overwhelmed", emoji: "😵", svg: '<circle cx="50" cy="50" r="40" fill="#fef3c7"/><circle cx="35" cy="35" r="5" fill="#f59e0b"/><circle cx="65" cy="35" r="5" fill="#f59e0b"/><path d="M30 60 Q50 50 70 60" stroke="#f59e0b" stroke-width="3" fill="none"/>' },
+    { name: "Angry", emoji: "😠", svg: '<circle cx="50" cy="50" r="40" fill="#fee2e2"/><circle cx="35" cy="35
